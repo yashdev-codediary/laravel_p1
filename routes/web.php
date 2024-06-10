@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,15 +75,25 @@ Route::get('/', function(){
 
 
 Route::get('/task', function () use ($tasks){
-    return view('index', ['tasks'=>$tasks]);
+  return view('index', ['tasks'=>$tasks]);
 })->name('task.index');
 
 Route::get('/task/{id}', function($id) use ($tasks){
-    $task = collect($tasks)->firstWhere('id',$id);
+  $task = collect($tasks)->firstWhere('id',$id);
 
-   if (!$task) {
-     abort(Response::HTTP_NOT_FOUND);
-   }
+  if (!$task) {
+   abort(Response::HTTP_NOT_FOUND);
+ }
 
-    return view('show', ['task'=>$task]);
+ return view('show', ['task'=>$task]);
 })->name('task.showone');
+
+
+Route::get('/dbconn', function(){
+  try {
+    DB::connection()->getPdo();
+    return 'Database connection is OK. Datbase name is: '.DB::connection()->getDatabaseName();
+  } catch (\Exception $e) {
+    return 'Could not connect to the database. Error: ' . $e->getMessage();
+  }
+});
