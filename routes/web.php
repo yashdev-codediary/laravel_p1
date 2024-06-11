@@ -70,7 +70,8 @@ $tasks = [
 ];
 
 Route::get('/', function(){
-  return redirect()->route('task.index');
+  //return redirect()->route('task.index');
+  echo phpinfo();
 });
 
 
