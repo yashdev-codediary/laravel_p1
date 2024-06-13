@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Response;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 
@@ -26,8 +27,14 @@ Route::get('/', function(){
 
 
 Route::get('/task', function (){
-  return view('index', ['tasks'=> \App\Models\Task::latest()->get()]);
+  return view('index', ['tasks'=> \App\Models\Task::latest()->where('completed', false)->get()]);
 })->name('task.index');
+
+Route::post('/tasks', function(Request $request){
+  dd($request->all());
+})->name('task.store');
+
+Route::view('tasks/create', 'create')->name('tasks.create');
 
 Route::get('/task/{id}', function($id){
   
@@ -43,3 +50,5 @@ Route::get('/dbconn', function(){
     return 'Could not connect to the database. Error: ' . $e->getMessage();
   }
 });
+
+
