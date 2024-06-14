@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Task;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,24 +22,36 @@ use Illuminate\Support\Facades\DB;
 
 Route::get('/', function(){
   return redirect()->route('task.index');
-  //echo phpinfo()
-  
 });
 
 
-Route::get('/task', function (){
-  return view('index', ['tasks'=> \App\Models\Task::latest()->where('completed', false)->get()]);
-})->name('task.index');
+Route::get('/tasklist', function (){
+  return view('index', ['tasks'=> Task::latest()->get()]);
+})->name('task.index'); 
 
 Route::post('/tasks', function(Request $request){
-  dd($request->all());
+    $data = $request->validate([
+        'title'=> 'required|max:255',
+        'description' => 'required',
+        'long_description' => 'required'
+    ]);
+    dd($data);
+    $task = new Task;
+    $task->title = $data['title'];
+    $task->description = $data['description'];
+    $task->long_description = $data['long_description'];
+    $task->save();
+
+    return redirect()->route('task.showone', ['id'=>$task->id]);
+    //dd($request->all());
+
 })->name('task.store');
 
 Route::view('tasks/create', 'create')->name('tasks.create');
 
-Route::get('/task/{id}', function($id){
+Route::get('/tasks/{id}', function($id){
   
- return view('show', ['task'=> \App\Models\Task::findorFail($id)]);
+ return view('show', ['task'=> Task::findorFail($id)]);
 })->name('task.showone');
 
 
