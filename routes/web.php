@@ -35,15 +35,14 @@ Route::post('/tasks', function(Request $request){
         'description' => 'required',
         'long_description' => 'required'
     ]);
-    dd($data);
+    
     $task = new Task;
     $task->title = $data['title'];
     $task->description = $data['description'];
     $task->long_description = $data['long_description'];
     $task->save();
 
-    return redirect()->route('task.showone', ['id'=>$task->id]);
-    //dd($request->all());
+    return redirect()->route('task.showone', ['id'=>$task->id])->with('success', 'Task is created successfully');
 
 })->name('task.store');
 
