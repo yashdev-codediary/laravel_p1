@@ -29,6 +29,7 @@ Route::get('/tasklist', function (){
   return view('index', ['tasks'=> Task::latest()->get()]);
 })->name('task.index'); 
 
+//Add route
 Route::post('/tasks', function(Request $request){
     $data = $request->validate([
         'title'=> 'required|max:255',
@@ -46,7 +47,31 @@ Route::post('/tasks', function(Request $request){
 
 })->name('task.store');
 
+//Edit route
+Route::put('/tasks/{id}', function($id, Request $request){
+    $data = $request->validate([
+        'title'=> 'required|max:255',
+        'description' => 'required',
+        'long_description' => 'required'
+    ]);
+    
+    $task = Task::findOrFail($id);
+    $task->title = $data['title'];
+    $task->description = $data['description'];
+    $task->long_description = $data['long_description'];
+    $task->save();
+
+    return redirect()->route('task.showone', ['id'=>$task->id])->with('success', 'Task is updated successfully');
+
+})->name('task.update');
+
 Route::view('tasks/create', 'create')->name('tasks.create');
+
+Route::get('/tasks/{id}/edit', function($id){
+  
+ return view('edit', ['task'=> Task::findorFail($id)]);
+})->name('task.edit');
+
 
 Route::get('/tasks/{id}', function($id){
   
