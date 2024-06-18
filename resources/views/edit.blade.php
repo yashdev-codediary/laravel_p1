@@ -11,10 +11,10 @@
 
 	</style>
 	
-@endsection
+@endsection  
 
 @section('content')
-<form method="post" action="{{ route('task.update', ['id' => $task->id]) }}">
+<form method="post" action="{{ route('task.update', ['task' => $task->id]) }}">
 	@csrf
 	@method('PUT')
 	<div>

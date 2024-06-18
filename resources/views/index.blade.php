@@ -4,7 +4,7 @@
 @if (count($tasks))
  @foreach ($tasks as $row)
     <div>
-        <a href="{{ route('task.showone', ['id' => $row->id ]) }}">{{ $row->title }}</a>
+        <a href="{{ route('task.showone', ['task' => $row->id ]) }}">{{ $row->title }}</a>
     </div>
  @endforeach
 @else
